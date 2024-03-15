@@ -1,6 +1,6 @@
 # crackStat
 Statistics generation for password audits  
-Usage
-'''
+Usage:
+```
 sudo python3 crackStat.py /path/to/pwfile.txt
-'''
+```
