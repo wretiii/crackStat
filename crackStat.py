@@ -8,6 +8,10 @@ def calc_entropy(password):
     L = len(password)
     return L * math.log2(N)
 
+def clean_password(password):
+    # Strip leading/trailing non-alphabetic characters but keep internal non-alphanumeric ones
+    return re.sub(r'^[^a-zA-Z]+|[^a-zA-Z]+$', '', password)
+
 def analyze_passwords(file_path):
     try:
         with open(file_path, 'r') as file:
@@ -17,7 +21,6 @@ def analyze_passwords(file_path):
         return
 
     total_passwords = len(passwords)
-    password_counts = Counter(passwords)
 
     # Helper function to calculate percentage
     def calc_percentage(count):
@@ -25,31 +28,25 @@ def analyze_passwords(file_path):
 
     # Top 10 Passwords
     print("Top 10 Passwords:")
-    for password, count in password_counts.most_common(10):
+    for password, count in Counter(passwords).most_common(10):
         print(f"{password} = {count} ({calc_percentage(count):.2f}%)")
 
-    # Top 10 Base Words
+    # Top 10 Base Passwords
     print("\nTop 10 Base Passwords:")
-    base_words = [''.join(filter(str.isalpha, password)).lower() for password in passwords]
-    # Filter out the blank passwords from base_words before counting
+    base_words = [clean_password(password).lower() for password in passwords]
     filtered_base_words = [word for word in base_words if word]
     base_word_counts = Counter(filtered_base_words)
-
     for word, count in base_word_counts.most_common(10):
         print(f"{word} = {count} ({calc_percentage(count):.2f}%)")
 
     # Calculate average password length
     average_length = sum(len(password) for password in passwords) / total_passwords if total_passwords > 0 else 0
-
-    # Password Length
     print("\nPassword Length:")
-    print(f"Average Characters: {average_length:.2f}")
-
+    print(f"Average Character Length: {average_length:.2f}")
     length_counts = Counter(len(password) for password in passwords)
     for length, count in length_counts.most_common():
         percentage = calc_percentage(count)
         print(f"{length} characters = {count} ({percentage:.2f}%)")
-
 
     # Password length categories
     print()
@@ -129,7 +126,7 @@ def analyze_passwords(file_path):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python3 stat-man.py password-file.txt")
+        print("Usage: python3 script.py password-file.txt")
     else:
         file_path = sys.argv[1]
         analyze_passwords(file_path)
