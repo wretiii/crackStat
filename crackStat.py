@@ -46,7 +46,7 @@ def analyze_passwords(file_path):
     length_counts = Counter(len(password) for password in passwords)
     for length, count in length_counts.most_common():
         percentage = calc_percentage(count)
-        print(f"{length} characters = {count} ({percentage:.2f}%)")
+        print(f"{length} = {count} ({percentage:.2f}%)")
 
     # Password length categories
     print()
@@ -80,7 +80,7 @@ def analyze_passwords(file_path):
     print()
     ending_with_digits_counts = {i: sum(1 for password in passwords if re.match(r'.*?(\d{' + str(i) + '})\Z', password)) for i in range(1, 5)}
     for digits, count in ending_with_digits_counts.items():
-        print(f"{digits} digits on the end = {count} ({calc_percentage(count):.2f}%)")
+        print(f"Ends with {digits} digit(s) = {count} ({calc_percentage(count):.2f}%)")
 
     # Last digit frequencies
     print("\nLast Digit:")
